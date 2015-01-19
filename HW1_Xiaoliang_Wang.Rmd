@@ -3,24 +3,68 @@ title: "HW1_Xiaoliang_Wang"
 author: "wendyxwang"
 date: "Thursday, January 15, 2015"
 output: html_document
+reader: Ning Li
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is BIOST/STAT 578 A Homework 1 by Xiaoliang(Wendy) Wang
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Homework 1 Q3
+Use the ggplot2 package to plot the Iris data showing length vs width facetting petal/sepal vs flower type, basically reproducing slide 27 of the lecture notes. Feel free to customize the styling as you see fit (color, font size, etc).
+
+First, read in the data and see how the data is displayed.
+```{r}
+library(sqldf)
+
+data(iris)
+head(iris)
+```
+
+The Sepal/Petal is not a variable, so We need to reshape the data to allow facet wth two variables.
 
 ```{r}
-summary(cars)
+library(reshape2)
+
+iris$id<-rownames(iris)
+#Use row numbers as flower id
+iris_melted <- melt(iris)
+
+head(iris_melted)
 ```
 
-You can also embed plots, for example:
+Then, we want to create new variable inditating sepal/petal of a flower
+```{r}
+#Split variable
+split_type<-strsplit(as.character(iris_melted$variable), split = "\\.")
+#Create two new variables
+iris_melted$flower_part <- sapply(split_type, "[", 1)
+iris_melted$measurement_type <- sapply(split_type, "[", 2)
 
-```{r, echo=FALSE}
-plot(cars)
+head(iris_melted)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+We would want length and width in the same row for the same flower, so we use case function
+```{r}
+iris_cast<-dcast(iris_melted, formula = id + Species + flower_part ~ measurement_type)
+
+head(iris_cast)
+```
+
+Now, we can use ggplot2 to plot length vs. width facetting sepal/petal vs. flower types
 
 ```{r}
-mean(cars)
+library(ggplot2)
+
+iris_plota <- qplot(x = Length, y = Width, data = iris_cast, geom = c("point", "smooth"), color = Species, method = "lm", facets = flower_part ~ Species)
+#make the points larger and re-scale the plot
+iris_plotb <- iris_plota + geom_point(size = 3) + facet_grid(flower_part~Species, scale = "free")
+#Looks better. But we would like to change font size larger
+iris_plotc <- iris_plotb + theme(text = element_text(size = 15))
+#Looks good! Output the plot
+iris_plotc
 ```
+
+
+Reference
+The above code referred to Dr. Gottardo's code in class
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
