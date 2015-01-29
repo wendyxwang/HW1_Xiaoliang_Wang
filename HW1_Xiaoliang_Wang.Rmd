@@ -84,3 +84,7 @@ I like the last plot better than the one on slide 27. So, I will go with this on
 The above code referred to Dr. Gottardo's code in class
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+
+#Comment
+I think this homework is good. It's a good try to play with some comments. Just a small piece of advice, the coordinate numbers overlapped a little bit on the last plot, please pay attention to that. Hooray! From Ning. 
